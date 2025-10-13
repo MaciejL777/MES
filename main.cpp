@@ -3,7 +3,6 @@
 #include "GlobalData.h"
 #include "Grid.h"
 #include "Gauss.h"
-#include "Functions.h"
 
 using namespace std;
 

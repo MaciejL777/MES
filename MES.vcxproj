@@ -127,14 +127,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Functions.cpp" />
     <ClCompile Include="Gauss.cpp" />
     <ClCompile Include="GlobalData.cpp" />
     <ClCompile Include="Grid.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Functions.h" />
     <ClInclude Include="Gauss.h" />
     <ClInclude Include="GlobalData.h" />
     <ClInclude Include="Grid.h" />

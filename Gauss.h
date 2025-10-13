@@ -34,3 +34,5 @@ public:
     double Integrate1d(int num_points);
     double Integrate2d(int num_points);
 };
+double fx(double x);
+double fxy(double x, double y);
