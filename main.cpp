@@ -31,6 +31,6 @@ int main() {
     cout << "2 punkty: " << funkcja2d.Integrate2d(2) << "\n";
     cout << "3 punkty: " << funkcja2d.Integrate2d(3) << "\n";
     cout << "4 punkty: " << funkcja2d.Integrate2d(4) << "\n";
-
+    
     return 0;
 }

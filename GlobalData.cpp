@@ -8,7 +8,6 @@ GlobalData::GlobalData(std::ifstream& file) {
 
         std::istringstream iss(line);
         std::string key, tmp;
-        double value;
 
         iss >> key;
 

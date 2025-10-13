@@ -21,6 +21,12 @@ double Gauss::Integrate2d(int num_points) {
     }
     return wynik;
 }
+void Gauss::SetFunction1d(double (*ff)(double)) {
+    ff1d = ff;
+}
+void Gauss::SetFunction2d(double (*ff)(double,double)) {
+    ff2d = ff;
+}
 double fx(double x) {
     return 5 * pow(x, 2) + 3 * x + 6;
 }
