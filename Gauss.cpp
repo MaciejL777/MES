@@ -1,4 +1,6 @@
 #include "Gauss.h"
+#include "GlobalData.h"
+#include "Grid.h"
 
 Gauss::Gauss(double (*ff1)(double)) : ff1d(ff1) {}
 Gauss::Gauss(double (*ff2)(double, double)) : ff2d(ff2) {}
@@ -13,6 +15,7 @@ double Gauss::Integrate1d(int num_points) {
 }
 double Gauss::Integrate2d(int num_points) {
     double wynik = 0;
+    num_points = sqrt(num_points);
     int start = start_index[num_points - 1];
     for (int i = 0; i < num_points; i++) {
         for (int j = 0; j < num_points; j++) {
@@ -33,3 +36,4 @@ double fx(double x) {
 double fxy(double x, double y) {
     return 5 * pow(x * y, 2) + 3 * x * y + 6;
 }
+

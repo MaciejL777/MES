@@ -1,4 +1,5 @@
 #include "GlobalData.h"
+#include "Gauss.h"
 
 GlobalData::GlobalData(std::ifstream& file) {
     std::string line;
@@ -43,4 +44,25 @@ void GlobalData::display()  {
     std::cout << "Density = " << Density << std::endl;
     std::cout << "SpecificHeat = " << SpecificHeat << std::endl;
     std::cout << "Liczba wezlow = " << nN << ", Liczba elementow = " << nE << std::endl;
+}
+GlobalData::GlobalData() {}
+ElemUniv::ElemUniv() {
+    int numpoints = sqrt(npc);
+    int k = 0;
+    int start = start_index[numpoints -1];
+        for (int j = numpoints-1; j >=0; j--) {
+            for (int i = numpoints-1; i>=0; i--) {
+                dN_dksi[k][0] = -0.25 * (1 - points[start + j]);
+                dN_dksi[k][1] = 0.25 * (1 - points[start + j]);
+                dN_dksi[k][2] = 0.25 * (1 + points[start + j]);
+                dN_dksi[k][3] = -0.25 * (1 + points[start + j]);
+
+                dN_deta[k][0] = -0.25 * (1 - points[start + i]);
+                dN_deta[k][1] = -0.25 * (1 + points[start + i]);
+                dN_deta[k][2] = 0.25 * (1 + points[start + i]);
+                dN_deta[k][3] = 0.25 * (1 - points[start + i]);
+
+                k++;
+            }
+        }
 }

@@ -5,17 +5,20 @@
 #include <string>
 #include <vector>
 #include "GlobalData.h"
+#include "Gauss.h"
+#include "Jakobian.h"
+
 
 class Node {
 public:
     double x, y;
     Node(double xVal, double yVal) : x(xVal), y(yVal) {}
 };
-
-class Element {
+class Element:public ElemUniv {
 public:
     int ID[4];
-    Element(int n1, int n2, int n3, int n4);
+    std::vector<Jakobian> J;
+    Element(int n1, int n2, int n3, int n4,std::vector<Node> nodes);
 };
 
 class Grid {
