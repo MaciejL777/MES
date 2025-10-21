@@ -8,13 +8,12 @@
 #include "Gauss.h"
 #include "Jakobian.h"
 
-
 class Node {
 public:
     double x, y;
     Node(double xVal, double yVal) : x(xVal), y(yVal) {}
 };
-class Element:public ElemUniv {
+class Element :public ElemUniv {
 public:
     int ID[4];
     std::vector<Jakobian> J;
@@ -32,4 +31,5 @@ public:
     Grid(std::ifstream& file, const GlobalData& global);
     void display();
 };
+
 

@@ -49,10 +49,10 @@ int main() {
           
         
     }
-   /* cout << grid.elements[0].J[0].J[0][0] << " " << grid.elements[0].J[0].J[0][1] << " " << grid.elements[0].J[0].J[1][0] << " " << grid.elements[0].J[0].J[1][1] << "\n";
+    cout << grid.elements[0].J[0].J[0][0] << " " << grid.elements[0].J[0].J[0][1] << " " << grid.elements[0].J[0].J[1][0] << " " << grid.elements[0].J[0].J[1][1] << "\n";
     cout << grid.elements[0].J[1].J[0][0] << " " << grid.elements[0].J[1].J[0][1] << " " << grid.elements[0].J[1].J[1][0] << " " << grid.elements[0].J[1].J[1][1] << "\n";
     cout << grid.elements[0].J[2].J[0][0] << " " << grid.elements[0].J[2].J[0][1] << " " << grid.elements[0].J[2].J[1][0] << " " << grid.elements[0].J[2].J[1][1] << "\n";
-    cout << grid.elements[0].J[3].J[0][0] << " " << grid.elements[0].J[3].J[0][1] << " " << grid.elements[0].J[3].J[1][0] << " " << grid.elements[0].J[3].J[1][1] << "\n";*/
+    cout << grid.elements[0].J[3].J[0][0] << " " << grid.elements[0].J[3].J[0][1] << " " << grid.elements[0].J[3].J[1][0] << " " << grid.elements[0].J[3].J[1][1] << "\n";
     double x[4] = { 0.0,0.025,0.025,0.0 };
     double y[4] = { 0.0,0.0,0.025,0.025 };
     Jakobian test(3, x, y);

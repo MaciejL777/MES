@@ -1,10 +1,11 @@
 #include "Grid.h"
 #include "Jakobian.h"
 
-Element::Element(int n1, int n2, int n3, int n4, std::vector<Node> nodes) {
+Element::Element(int n1, int n2, int n3, int n4,std::vector<Node> nodes) {
     ID[0] = n1; ID[1] = n2; ID[2] = n3; ID[3] = n4;
-    double x[4] = { nodes[0].x,nodes[1].x,nodes[2].x,nodes[3].x };
-    double y[4] = { nodes[0].y,nodes[1].y,nodes[2].y,nodes[3].y };
+    
+    double x[4] = { nodes[n1-1].x,nodes[n2-1].x,nodes[n3-1].x,nodes[n4-1].x };
+    double y[4] = { nodes[n1-1].y,nodes[n2-1].y,nodes[n3-1].y,nodes[n4-1].y };
      for (int i =  0; i < npc; i++) {
             Jakobian jk(i,x,y);
             J.push_back(jk);
@@ -53,19 +54,13 @@ Grid::Grid(std::ifstream& file, const GlobalData& global) : nN(global.nN), nE(gl
         std::istringstream iss(line);
 
         int id, n1, n2, n3, n4;
-        if (!(iss >> id >> n4 >> n3 >> n2 >> n1)) {
+        if (!(iss >> id >> n3 >> n4 >> n1 >> n2)) {
             std::cerr << "blad przy wczytywaniu elementu nr " << i + 1 << " | linia: " << line << std::endl;
             exit(1);
         }
-        std::vector<Node> tmp;
-        tmp.push_back(nodes[n1-1]);
-        tmp.push_back(nodes[n2-1]);
-        tmp.push_back(nodes[n3-1]);
-        tmp.push_back(nodes[n4-1]);
         //std::cout << tmp[0].x << " " << tmp[1].x << " " << tmp[2].x << " " << tmp[3].x << "\n";
         //std::cout << tmp[0].y << " " << tmp[1].y << " " << tmp[2].y << " " << tmp[3].y << "\n";
-        elements.emplace_back(n1, n2, n3, n4,tmp);
-        tmp.clear();
+        elements.emplace_back(n1, n2, n3, n4,nodes);
     }
 
     while (std::getline(file, line)) {
