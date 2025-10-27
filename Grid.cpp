@@ -1,7 +1,7 @@
 #include "Grid.h"
 #include "Jakobian.h"
-
-Element::Element(int n1, int n2, int n3, int n4,std::vector<Node> nodes) {
+#include<array>
+Element::Element(int n1, int n2, int n3, int n4,std::vector<Node> nodes,double k) {
     ID[0] = n1; ID[1] = n2; ID[2] = n3; ID[3] = n4;
     
     double x[4] = { nodes[n1-1].x,nodes[n2-1].x,nodes[n3-1].x,nodes[n4-1].x };
@@ -10,7 +10,54 @@ Element::Element(int n1, int n2, int n3, int n4,std::vector<Node> nodes) {
             Jakobian jk(i,x,y);
             J.push_back(jk);
     }
+     
+     Licz_H(k);
 }
+void Element::Licz_H(double k) {
+
+    for (int i = 0; i < npc; i++) {
+        for (int j = 0; j < 4; j++) {
+            dndx[i][j] = J[i].J1[0][0] * dN_dksi[i][j] + J[i].J1[0][1] * dN_deta[i][j];
+            dndy[i][j] = J[i].J1[1][0] * dN_dksi[i][j] + J[i].J1[1][1] * dN_deta[i][j];
+        }
+    }
+
+    std::array<std::array<double, 4>, 4> wynik{};
+    std::vector<std::array<std::array<double, 4>, 4>> Hpc;
+
+    for (int n = 0; n < npc; n++) {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                double v = (dndx[n][i] * dndx[n][j] + dndy[n][i] * dndy[n][j]) *(double)k * J[n].detJ;
+                wynik[i][j] = v;
+              /* std:: cout <<"v:"<< v << "\n";
+               std::cout << "dndx:" << dndx[n][i]<<"   "<<dndx[n][j] << "\n";
+               std::cout << "dndy:" << dndy[n][i] << "   " << dndy[n][j] << "\n";
+               std::cout << "detJ:" << J[n].detJ << "\n";
+               std::cout << "conductivity:" << k << "\n";*/
+            }
+        }
+        Hpc.push_back(wynik);
+    }
+
+    int num_points = static_cast<int>(sqrt(npc));
+    int start = start_index[num_points - 1];
+    std::vector<double> w;
+    for (int i = num_points-1; i >=0; i--) {
+        for (int j = num_points-1; j >=0; j--) {
+            w.push_back(weights[start + i] * weights[start + j]);
+        }
+    } 
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+             for (int n = 0; n < npc; n++) {
+                     H_local[i][j] += Hpc[n][i][j] * w[n];
+             }
+             
+        }
+    }
+}
+
 
 Grid::Grid(std::ifstream& file, const GlobalData& global) : nN(global.nN), nE(global.nE) {
     std::string line;
@@ -54,13 +101,13 @@ Grid::Grid(std::ifstream& file, const GlobalData& global) : nN(global.nN), nE(gl
         std::istringstream iss(line);
 
         int id, n1, n2, n3, n4;
-        if (!(iss >> id >> n3 >> n4 >> n1 >> n2)) {
+        if (!(iss >> id >> n1 >> n2 >> n3 >> n4)) {
             std::cerr << "blad przy wczytywaniu elementu nr " << i + 1 << " | linia: " << line << std::endl;
             exit(1);
         }
         //std::cout << tmp[0].x << " " << tmp[1].x << " " << tmp[2].x << " " << tmp[3].x << "\n";
         //std::cout << tmp[0].y << " " << tmp[1].y << " " << tmp[2].y << " " << tmp[3].y << "\n";
-        elements.emplace_back(n1, n2, n3, n4,nodes);
+        elements.emplace_back(n1, n2, n3, n4,nodes,global.Conductivity);
     }
 
     while (std::getline(file, line)) {

@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include <fstream>
 #include<vector>
+#include<array>
 #include "GlobalData.h"
 #include "Grid.h"
 #include "Gauss.h"
@@ -9,7 +10,7 @@
 using namespace std;
 
 int main() {
-    ifstream file("Test1_4_4.txt");
+    ifstream file("Test2_4_4_MixGrid.txt");
     if (!file.is_open()) {
         cerr << "Nie mozna otworzyc pliku" << endl;
         return 1;
@@ -37,26 +38,32 @@ int main() {
     
     for (int k = 0; k < GlobalData::npc; k++) {
         cout << "Point" << k << "\n";
-            cout << elem_univ.dN_dksi[k][0] << "\n";
-            cout << elem_univ.dN_dksi[k][1] << "\n";
-            cout << elem_univ.dN_dksi[k][2] << "\n";
-            cout << elem_univ.dN_dksi[k][3] << "\n";
+        cout << elem_univ.dN_dksi[k][0] << "\n";
+        cout << elem_univ.dN_dksi[k][1] << "\n";
+        cout << elem_univ.dN_dksi[k][2] << "\n";
+        cout << elem_univ.dN_dksi[k][3] << "\n";
 
-            cout << elem_univ.dN_deta[k][0] << "\n";
-            cout << elem_univ.dN_deta[k][1] << "\n";
-            cout << elem_univ.dN_deta[k][2] << "\n";
-            cout << elem_univ.dN_deta[k][3] << "\n";
-          
-        
-    }
-    cout << grid.elements[0].J[0].J[0][0] << " " << grid.elements[0].J[0].J[0][1] << " " << grid.elements[0].J[0].J[1][0] << " " << grid.elements[0].J[0].J[1][1] << "\n";
+        cout << elem_univ.dN_deta[k][0] << "\n";
+        cout << elem_univ.dN_deta[k][1] << "\n";
+        cout << elem_univ.dN_deta[k][2] << "\n";
+        cout << elem_univ.dN_deta[k][3] << "\n";
+
+
+    };
+   cout << grid.elements[0].J[0].J[0][0] << " " << grid.elements[0].J[0].J[0][1] << " " << grid.elements[0].J[0].J[1][0] << " " << grid.elements[0].J[0].J[1][1] << "\n";
     cout << grid.elements[0].J[1].J[0][0] << " " << grid.elements[0].J[1].J[0][1] << " " << grid.elements[0].J[1].J[1][0] << " " << grid.elements[0].J[1].J[1][1] << "\n";
     cout << grid.elements[0].J[2].J[0][0] << " " << grid.elements[0].J[2].J[0][1] << " " << grid.elements[0].J[2].J[1][0] << " " << grid.elements[0].J[2].J[1][1] << "\n";
     cout << grid.elements[0].J[3].J[0][0] << " " << grid.elements[0].J[3].J[0][1] << " " << grid.elements[0].J[3].J[1][0] << " " << grid.elements[0].J[3].J[1][1] << "\n";
-    double x[4] = { 0.0,0.025,0.025,0.0 };
+    /*double x[4] = { 0.0,0.025,0.025,0.0 };
     double y[4] = { 0.0,0.0,0.025,0.025 };
     Jakobian test(3, x, y);
     cout << test.J[0][0] << " " << test.J[0][1] << " "<<test.J[1][0] << " "<< test.J[1][1];
-    cout << "\n" << 1 / test.detJ;
+    cout << "\n" << 1 / test.detJ;*/
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            cout << grid.elements[0].H_local[i][j] << "  ";
+        }
+        cout << "\n";
+    }
     return 0;
 }
