@@ -30,6 +30,9 @@
     <ClCompile Include="Jakobian.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Equations.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GlobalData.h">
@@ -42,6 +45,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Jakobian.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Equations.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -31,7 +31,6 @@ public:
     std::vector<int> BC;
     int nN;
     int nE;
-
     Grid(std::ifstream& file, const GlobalData& global);
     void display();
 };
