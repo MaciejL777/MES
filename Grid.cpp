@@ -1,7 +1,7 @@
 #include "Grid.h"
 #include "Jakobian.h"
 #include<array>
-Element::Element(int n1, int n2, int n3, int n4,std::vector<Node> nodes,double k) {
+Element::Element(int n1, int n2, int n3, int n4,std::vector<Node> nodes) {
     ID[0] = n1; ID[1] = n2; ID[2] = n3; ID[3] = n4;
     
     double x[4] = { nodes[n1-1].x,nodes[n2-1].x,nodes[n3-1].x,nodes[n4-1].x };
@@ -10,10 +10,8 @@ Element::Element(int n1, int n2, int n3, int n4,std::vector<Node> nodes,double k
             Jakobian jk(i,x,y);
             J.push_back(jk);
     }
-     
-     Licz_H(k);
 }
-void Element::Licz_H(double k) {
+void Element::Licz_H(double k,std::vector<Node> nodes,double alfa) {
 
     for (int i = 0; i < npc; i++) {
         for (int j = 0; j < 4; j++) {
@@ -54,6 +52,25 @@ void Element::Licz_H(double k) {
                      H_local[i][j] += Hpc[n][i][j] * w[n];
              }
              
+        }
+    }
+    for (int bok = 0; bok < 4; bok++) {
+        if (nodes[ID[bok]-1].BC == 1 && nodes[ID[(bok + 1) % 4]-1].BC == 1) {
+            double dy = abs(nodes[ID[bok]-1].y - nodes[ID[(bok + 1) % 4]-1].y);
+            double dx = abs(nodes[ID[bok]-1].x - nodes[ID[(bok + 1) % 4]-1].x);
+            double detJ = sqrt(dy * dy + dx * dx) / 2.0;
+            for (int n = 0; n < num_points; n++) {
+                for (int i = 0; i < 4; i++) {
+                    for (int j = 0; j < 4; j++) {
+                        Hbc[i][j] += alfa * surface[bok].N[n][i] * surface[bok].N[n][j] * weights[start + n] * detJ;
+                    }
+                }
+            }
+        }
+    }
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            H_local[i][j] += Hbc[i][j];
         }
     }
 }
@@ -107,7 +124,7 @@ Grid::Grid(std::ifstream& file, const GlobalData& global) : nN(global.nN), nE(gl
         }
         //std::cout << tmp[0].x << " " << tmp[1].x << " " << tmp[2].x << " " << tmp[3].x << "\n";
         //std::cout << tmp[0].y << " " << tmp[1].y << " " << tmp[2].y << " " << tmp[3].y << "\n";
-        elements.emplace_back(n1, n2, n3, n4,nodes,global.Conductivity);
+        elements.emplace_back(n1, n2, n3, n4,nodes);
     }
 
     while (std::getline(file, line)) {
@@ -118,7 +135,13 @@ Grid::Grid(std::ifstream& file, const GlobalData& global) : nN(global.nN), nE(gl
         for (char& c : line) if (c == ',') c = ' ';
         std::istringstream iss(line);
         int val;
-        while (iss >> val) BC.push_back(val);
+        while (iss >> val) {
+            BC.push_back(val);
+            nodes[val - 1].BC = 1;
+        }
+    }
+    for (int i = 0; i < nE;i++) {
+        elements[i].Licz_H(global.Conductivity, nodes,global.Alfa);
     }
 }
 void Grid::display()  {

@@ -23,6 +23,11 @@ public:
     void display();
     GlobalData();
 };
+class Surface {
+public:
+    std::vector<std::vector<double>> N;
+    void Next(double ksi, double eta);
+};
 class ElemUniv:public GlobalData {
 public:
     const double points[10] = {
@@ -48,6 +53,7 @@ public:
     const int start_index[4] = { 0, 1, 3, 6 };
     double dN_dksi[npc][4];
     double dN_deta[npc][4];
+    Surface surface[4];
     ElemUniv();
 };
 

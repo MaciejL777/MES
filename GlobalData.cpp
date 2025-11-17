@@ -46,6 +46,14 @@ void GlobalData::display()  {
     std::cout << "Liczba wezlow = " << nN << ", Liczba elementow = " << nE << std::endl;
 }
 GlobalData::GlobalData() {}
+void Surface::Next(double ksi, double eta) {
+    std::vector<double> pc;
+    pc.push_back( 0.25 * (1 - ksi) * (1 - eta));
+    pc.push_back(0.25 * (1 + ksi) * (1 - eta));
+    pc.push_back(0.25 * (1 + ksi) * (1 + eta));
+    pc.push_back(0.25 * (1 - ksi) * (1 + eta));
+    N.push_back(pc);
+}
 ElemUniv::ElemUniv() {
     int numpoints = sqrt(npc);
     int k = 0;
@@ -65,4 +73,25 @@ ElemUniv::ElemUniv() {
                 k++;
             }
         }
+        Surface dol;
+        for (int i=0; i <numpoints; i++) {
+            dol.Next(points[start + i], -1);
+        }
+        surface[0] = dol;
+        Surface prawo;
+        for (int i=0; i < numpoints; i++) {
+            prawo.Next(1, points[start + i]);
+        }
+        surface[1] = prawo;
+        Surface gora;
+        for (int i = 0 ; i < numpoints; i++) {
+            gora.Next(points[start + i], 1);
+        }
+        surface[2] = gora;
+        Surface lewo;
+        for (int i = 0; i < numpoints; i++) {
+            lewo.Next(-1, points[start+i]);
+        }
+        surface[3] = lewo;
 }
+

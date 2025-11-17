@@ -1,5 +1,6 @@
 ﻿#include <iostream>
 #include <fstream>
+#include<iomanip>
 #include<vector>
 #include<array>
 #include "GlobalData.h"
@@ -21,9 +22,13 @@ int main() {
     ElemUniv elem_univ;
     Grid grid(file, global);
     Equations eq(global.nN);
+    eq.Compute_H(grid);
     global.display();
     grid.display();
-
+   /* cout << elem_univ.surface[3].N[0][0]<<endl;
+    cout << elem_univ.surface[3].N[0][1]<<endl;
+    cout << elem_univ.surface[3].N[0][2]<<endl;
+    cout << elem_univ.surface[3].N[0][3]<<endl;*/
    /* Gauss funkcja1d(fx);
     cout << "\n=== Integracja Gaussa ===" << endl;
     cout << "1 punkt: " << funkcja1d.Integrate1d(1) << "\n";
@@ -60,13 +65,13 @@ int main() {
     Jakobian test(3, x, y);
     cout << test.J[0][0] << " " << test.J[0][1] << " "<<test.J[1][0] << " "<< test.J[1][1];
     cout << "\n" << 1 / test.detJ;*/
-   /* for (int i = 0; i < 4; i++) {
+    /*for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
-            cout << grid.elements[0].H_local[i][j] << "  ";
+            cout << grid.elements[0].Hbc[i][j] << "  ";
         }
         cout << "\n";
     }*/
-    eq.Compute_H(grid);
+    std::cout << std::fixed << std::setprecision(2);
     for (int i = 0; i < 16; i++) {
         for (int j = 0; j < 16; j++) {
             cout << eq.H[i][j] << "  ";
