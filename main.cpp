@@ -2,12 +2,13 @@
 #include <fstream>
 #include<iomanip>
 #include<vector>
+#include<cmath>
 #include<array>
 #include "GlobalData.h"
 #include "Grid.h"
-#include "Gauss.h"
 #include "Jakobian.h"
 #include "Equations.h"
+#include"ElemUniw.h"
 
 using namespace std;
 
@@ -29,19 +30,7 @@ int main() {
     cout << elem_univ.surface[3].N[0][1]<<endl;
     cout << elem_univ.surface[3].N[0][2]<<endl;
     cout << elem_univ.surface[3].N[0][3]<<endl;*/
-   /* Gauss funkcja1d(fx);
-    cout << "\n=== Integracja Gaussa ===" << endl;
-    cout << "1 punkt: " << funkcja1d.Integrate1d(1) << "\n";
-    cout << "2 punkty: " << funkcja1d.Integrate1d(2) << "\n";
-    cout << "3 punkty: " << funkcja1d.Integrate1d(3) << "\n";
-    cout << "4 punkty: " << funkcja1d.Integrate1d(4) << "\n";
-    Gauss funkcja2d(fxy);
-    cout << "\n=== Integracja Gaussa ===" << endl;
-    cout << "1 punkt: " << funkcja2d.Integrate2d(1) << "\n";
-    cout << "2 punkty: " << funkcja2d.Integrate2d(4) << "\n";
-    cout << "3 punkty: " << funkcja2d.Integrate2d(9) << "\n";
-    cout << "4 punkty: " << funkcja2d.Integrate2d(16) << "\n";
-    */
+
     /*for (int k = 0; k < GlobalData::npc; k++) {
         cout << "Point" << k << "\n";
         cout << elem_univ.dN_dksi[k][0] << "\n";

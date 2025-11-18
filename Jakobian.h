@@ -1,6 +1,6 @@
 #pragma once
 #include<vector>
-#include "GlobalData.h"
+#include "ElemUniw.h"
 #include <cmath>
 class Jakobian: public ElemUniv {
 public:

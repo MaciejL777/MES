@@ -1,5 +1,5 @@
 #pragma once
-#include "GlobalData.h"
+#include "ElemUniw.h"
 #include <cmath>
 
 class Gauss: public ElemUniv {
