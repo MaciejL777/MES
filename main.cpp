@@ -24,8 +24,16 @@ int main() {
     Grid grid(file, global);
     Equations eq(global.nN);
     eq.Compute_H(grid);
+    eq.Compute_P(grid);
+    eq.solveSystem();
+    std:vector<double> t = eq.getResult();
     global.display();
     grid.display();
+    //eq.ShowH();
+    cout << "\n";
+    for (int i = 0; i < 16; i++) {
+        cout <<"Wezel(ID):"<<i+1<<" = "<< t[i] << "\n";
+    }
    /* cout << elem_univ.surface[3].N[0][0]<<endl;
     cout << elem_univ.surface[3].N[0][1]<<endl;
     cout << elem_univ.surface[3].N[0][2]<<endl;
@@ -60,12 +68,6 @@ int main() {
         }
         cout << "\n";
     }*/
-    std::cout << std::fixed << std::setprecision(2);
-    for (int i = 0; i < 16; i++) {
-        for (int j = 0; j < 16; j++) {
-            cout << eq.H[i][j] << "  ";
-        }
-        cout << "\n";
-    }
+   
     return 0;
 }

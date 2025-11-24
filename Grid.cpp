@@ -68,7 +68,7 @@ Grid::Grid(std::ifstream& file, const GlobalData& global) : nN(global.nN), nE(gl
         }
     }
     for (int i = 0; i < nE;i++) {
-        elements[i].Licz_H(global.Conductivity, nodes,global.Alfa);
+        elements[i].Licz_H_P(global.Conductivity, nodes,global.Alfa,global.Tot);
     }
 }
 void Grid::display()  {

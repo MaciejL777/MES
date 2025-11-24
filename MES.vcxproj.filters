@@ -59,4 +59,15 @@
       <Filter>Header Files</Filter>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Test1_4_4.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="Test2_4_4_MixGrid.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="Test3_31_31_kwadrat.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+  </ItemGroup>
 </Project>

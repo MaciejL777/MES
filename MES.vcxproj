@@ -145,6 +145,11 @@
   <ItemGroup>
     <None Include="ElemUniw.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Test1_4_4.txt" />
+    <Text Include="Test2_4_4_MixGrid.txt" />
+    <Text Include="Test3_31_31_kwadrat.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

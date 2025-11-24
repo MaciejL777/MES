@@ -11,8 +11,10 @@ Element::Element(int n1, int n2, int n3, int n4, std::vector<Node> nodes) {
         J.push_back(jk);
     }
 }
-void Element::Licz_H(double k, std::vector<Node> nodes, double alfa) {
-
+void Element::Licz_H_P(double k, std::vector<Node> nodes, double alfa,double Tot) {
+   // if (nodes[ID[1] - 1].BC == 1 && nodes[ID[(1 + 1) % 4] - 1].BC == 1) {////////Zmiana temperatury startowej po prawej stronie
+     //   Tot = 200;                                                        /////////////
+    //}                                                                  /////////////////////////////
     for (int i = 0; i < npc; i++) {
         for (int j = 0; j < 4; j++) {
             dndx[i][j] = J[i].J1[0][0] * dN_dksi[i][j] + J[i].J1[0][1] * dN_deta[i][j];
@@ -61,6 +63,7 @@ void Element::Licz_H(double k, std::vector<Node> nodes, double alfa) {
             double detJ = sqrt(dy * dy + dx * dx) / 2.0;
             for (int n = 0; n < num_points; n++) {
                 for (int i = 0; i < 4; i++) {
+                    P_local[i] += alfa * surface[bok].N[n][i] * weights[start + n] * detJ*Tot;
                     for (int j = 0; j < 4; j++) {
                         Hbc[i][j] += alfa * surface[bok].N[n][i] * surface[bok].N[n][j] * weights[start + n] * detJ;
                     }

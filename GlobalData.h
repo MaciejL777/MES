@@ -18,7 +18,7 @@ public:
     double SpecificHeat=0;
     int nN=0; // liczba wêz³ów
     int nE=0; // liczba elementów
-    const static int npc = 4;
+    const static int npc = 9;
     GlobalData(std::ifstream& file);
     void display();
     GlobalData();
