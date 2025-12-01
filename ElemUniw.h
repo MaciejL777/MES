@@ -31,6 +31,7 @@ public:
     const int start_index[4] = { 0, 1, 3, 6 };
     double dN_dksi[npc][4];
     double dN_deta[npc][4];
+    double N[npc][4];
     Surface surface[4];
     ElemUniv();
 };

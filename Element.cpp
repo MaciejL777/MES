@@ -11,7 +11,7 @@ Element::Element(int n1, int n2, int n3, int n4, std::vector<Node> nodes) {
         J.push_back(jk);
     }
 }
-void Element::Licz_H_P(double k, std::vector<Node> nodes, double alfa,double Tot) {
+void Element::Licz_H_P_C(double k, std::vector<Node> nodes, double alfa,double Tot,double density, double specificheat) {
    // if (nodes[ID[1] - 1].BC == 1 && nodes[ID[(1 + 1) % 4] - 1].BC == 1) {////////Zmiana temperatury startowej po prawej stronie
      //   Tot = 200;                                                        /////////////
     //}                                                                  /////////////////////////////
@@ -24,12 +24,16 @@ void Element::Licz_H_P(double k, std::vector<Node> nodes, double alfa,double Tot
 
     std::array<std::array<double, 4>, 4> wynik{};
     std::vector<std::array<std::array<double, 4>, 4>> Hpc;
+    std::array<std::array<double, 4>, 4> wynikC{};
+    std::vector<std::array<std::array<double, 4>, 4>> Cpc;
 
     for (int n = 0; n < npc; n++) {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 double v = (dndx[n][i] * dndx[n][j] + dndy[n][i] * dndy[n][j]) * (double)k * J[n].detJ;
+                double c = density * specificheat * N[n][i] * N[n][j] * J[n].detJ;
                 wynik[i][j] = v;
+                wynikC[i][j] = c;
                 /* std:: cout <<"v:"<< v << "\n";
                  std::cout << "dndx:" << dndx[n][i]<<"   "<<dndx[n][j] << "\n";
                  std::cout << "dndy:" << dndy[n][i] << "   " << dndy[n][j] << "\n";
@@ -38,6 +42,7 @@ void Element::Licz_H_P(double k, std::vector<Node> nodes, double alfa,double Tot
             }
         }
         Hpc.push_back(wynik);
+        Cpc.push_back(wynikC);
     }
 
     int num_points = static_cast<int>(sqrt(npc));
@@ -52,6 +57,7 @@ void Element::Licz_H_P(double k, std::vector<Node> nodes, double alfa,double Tot
         for (int j = 0; j < 4; j++) {
             for (int n = 0; n < npc; n++) {
                 H_local[i][j] += Hpc[n][i][j] * w[n];
+                C_local[i][j] += Cpc[n][i][j] * w[n];
             }
 
         }

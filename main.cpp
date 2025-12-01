@@ -22,18 +22,29 @@ int main() {
     GlobalData global(file);
     ElemUniv elem_univ;
     Grid grid(file, global);
-    Equations eq(global.nN);
-    eq.Compute_H(grid);
-    eq.Compute_P(grid);
-    eq.solveSystem();
-    std:vector<double> t = eq.getResult();
+    Equations eq(global.nN,global.InitialTemp,global.SimulationStepTime);
+    eq.Compute(grid);
     global.display();
     grid.display();
     //eq.ShowH();
-    cout << "\n";
-    for (int i = 0; i < 16; i++) {
-        cout <<"Wezel(ID):"<<i+1<<" = "<< t[i] << "\n";
+    //eq.ShowC();
+    for (int j = 0; j < global.SimulationTime/global.SimulationStepTime; j++) {
+        eq.solveSystem();
+    std:vector<double> t = eq.getResult();
+        eq.t0 = t;
+        cout << "Iteracja: " << j+1;
+        cout << "\n";
+        for (int i = 0; i < global.nN; i++) {
+            cout << "Wezel(ID):" << i + 1 << " = " << t[i] << "\n";
+        }
     }
+   /* for (int k = 0; k < GlobalData::npc; k++) {
+        cout << "Point" << k << "\n";
+        cout << elem_univ.N[k][0] << "\n";
+        cout << elem_univ.N[k][1] << "\n";
+        cout << elem_univ.N[k][2] << "\n";
+        cout << elem_univ.N[k][3] << "\n";
+    }*/
    /* cout << elem_univ.surface[3].N[0][0]<<endl;
     cout << elem_univ.surface[3].N[0][1]<<endl;
     cout << elem_univ.surface[3].N[0][2]<<endl;

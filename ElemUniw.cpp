@@ -16,6 +16,10 @@ ElemUniv::ElemUniv() {
             dN_deta[k][2] = 0.25 * (1 + points[start + i]);
             dN_deta[k][3] = 0.25 * (1 - points[start + i]);
 
+            N[k][0] = 0.25 * (1 - points[start + i]) * (1 - points[start + j]);
+            N[k][1] = 0.25 * (1 + points[start + i]) * (1 - points[start + j]);
+            N[k][2] = 0.25 * (1 + points[start + i]) * (1 + points[start + j]);
+            N[k][3] = 0.25 * (1 - points[start + i]) * (1 + points[start + j]);
             k++;
         }
     }
