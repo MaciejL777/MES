@@ -2,7 +2,7 @@
 #include "ElemUniw.h"
 #include <cmath>
 
-class Gauss: public ElemUniv {
+class Gauss {
     double (*ff1d)(double) = nullptr;
     double (*ff2d)(double, double) = nullptr;
 public:

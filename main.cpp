@@ -1,4 +1,6 @@
-﻿#include <iostream>
+﻿
+
+#include <iostream>
 #include <fstream>
 #include<iomanip>
 #include<vector>
@@ -11,8 +13,10 @@
 #include"ElemUniw.h"
 
 using namespace std;
-
+ElemUniv* Jakobian::Univ = nullptr;
+ElemUniv* Element::Univ = nullptr;
 int main() {
+    
     ifstream file("Test1_4_4.txt");
     if (!file.is_open()) {
         cerr << "Nie mozna otworzyc pliku" << endl;
@@ -20,7 +24,9 @@ int main() {
     }
 
     GlobalData global(file);
-    ElemUniv elem_univ;
+    ElemUniv elem_univ(global);
+    Jakobian::setUniv(&elem_univ);
+    Element::setUniv(&elem_univ);
     Grid grid(file, global);
     Equations eq(global.nN,global.InitialTemp,global.SimulationStepTime);
     eq.Compute(grid);

@@ -1,7 +1,8 @@
 #include"ElemUniw.h"
 #include<cmath>
-ElemUniv::ElemUniv() {
-    int numpoints = sqrt(npc);
+ElemUniv::ElemUniv(GlobalData data) {
+    global = data;
+    int numpoints = sqrt(global.npc);
     int k = 0;
     int start = start_index[numpoints - 1];
     for (int j = numpoints - 1; j >= 0; j--) {

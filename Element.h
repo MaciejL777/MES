@@ -7,7 +7,7 @@ public:
     int BC = 0;
     Node(double xVal, double yVal) : x(xVal), y(yVal) {}
 };
-class Element :public ElemUniv {
+class Element  {
 public:
     int ID[4];
     std::vector<Jakobian> J;
@@ -19,4 +19,6 @@ public:
     double dndy[GlobalData::npc][4];
     double H_local[4][4] = { 0 };
     void Licz_H_P_C(double k, std::vector<Node> nodes, double alfa,double Tot, double density, double specificheat);
+    static ElemUniv* Univ;
+    static void setUniv(ElemUniv* ele) { Univ = ele; }
 };

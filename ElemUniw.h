@@ -6,7 +6,7 @@ public:
     std::vector<std::vector<double>> N;
     void Next(double ksi, double eta);
 };
-class ElemUniv :public GlobalData {
+class ElemUniv  {
 public:
     const double points[10] = {
        0,
@@ -27,11 +27,12 @@ public:
         (18.0 + sqrt(30.0)) / 36.0, (18.0 + sqrt(30.0)) / 36.0,
         (18.0 - sqrt(30.0)) / 36.0, (18.0 - sqrt(30.0)) / 36.0
     };
-
+    GlobalData global;
     const int start_index[4] = { 0, 1, 3, 6 };
-    double dN_dksi[npc][4];
-    double dN_deta[npc][4];
-    double N[npc][4];
+    double dN_dksi[GlobalData::npc][4];
+    double dN_deta[GlobalData::npc][4];
+    double N[GlobalData::npc][4];
     Surface surface[4];
+    ElemUniv(GlobalData data);
     ElemUniv();
 };
