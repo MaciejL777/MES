@@ -1,28 +1,69 @@
-﻿
-
-#include <iostream>
+﻿#include <iostream>
 #include <fstream>
 #include<iomanip>
 #include<vector>
 #include<cmath>
 #include<array>
+#include <chrono>
+#include <cstdlib>
+#include <string>
 #include "GlobalData.h"
 #include "Grid.h"
 #include "Jakobian.h"
 #include "Equations.h"
 #include"ElemUniw.h"
 
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
 using namespace std;
 ElemUniv* Jakobian::Univ = nullptr;
 ElemUniv* Element::Univ = nullptr;
-int main() {
-    
-    ifstream file("Test1_4_4.txt");
+int main(int argc, char** argv) {
+    // start pomiaru czasu od wejścia do main
+    auto t_start = std::chrono::high_resolution_clock::now();
+
+    int numThreads = 0;
+    if (argc > 1) {
+        try {
+            numThreads = std::stoi(argv[1]);
+        } catch (...) {
+            numThreads = 0;
+        }
+    }
+    if (numThreads <= 0) {
+        char* env = nullptr;
+        size_t envLen = 0;
+        if (_dupenv_s(&env, &envLen, "OMP_NUM_THREADS") == 0 && env != nullptr) {
+            try {
+                numThreads = std::stoi(env);
+            } catch (...) {
+                numThreads = 0;
+            }
+        }
+    }
+
+#ifdef _OPENMP
+    if (numThreads > 0) {
+        omp_set_num_threads(numThreads);
+    }
+    int used = omp_get_max_threads();
+    cout << "OpenMP dostępne. Liczba watkow ustawiona na: " << used << "\n";
+#else
+    if (numThreads > 0) {
+        cout << "Uwaga: program skompilowany bez OpenMP. Ignoruje ustawienie liczby wątkow.\n";
+    } else {
+        cout << "OpenMP niedostepne.\n";
+    }
+#endif
+
+    ifstream file("Test3_31_31_kwadrat.txt");
     if (!file.is_open()) {
         cerr << "Nie mozna otworzyc pliku" << endl;
         return 1;
     }
-
+    vector<Node> wyniki;
     GlobalData global(file);
     ElemUniv elem_univ(global);
     Jakobian::setUniv(&elem_univ);
@@ -32,59 +73,33 @@ int main() {
     eq.Compute(grid);
     global.display();
     grid.display();
-    //eq.ShowH();
-    //eq.ShowC();
     for (int j = 0; j < global.SimulationTime/global.SimulationStepTime; j++) {
         eq.solveSystem();
-    std:vector<double> t = eq.getResult();
+        std::vector<double> t = eq.getResult();
         eq.t0 = t;
-        cout << "Iteracja: " << j+1;
-        cout << "\n";
+        cout << "Iteracja: " << j+1 << "\n";
+        Node min_max(global.InitialTemp,global.InitialTemp);
+        min_max.x = t[0];
+        min_max.y = t[0];
         for (int i = 0; i < global.nN; i++) {
+            if (t[i] < min_max.x) {
+                min_max.x = t[i];
+            }
+            else if (t[i] > min_max.y) {
+                min_max.y = t[i];
+            }
             cout << "Wezel(ID):" << i + 1 << " = " << t[i] << "\n";
         }
+        wyniki.push_back(min_max);
     }
-   /* for (int k = 0; k < GlobalData::npc; k++) {
-        cout << "Point" << k << "\n";
-        cout << elem_univ.N[k][0] << "\n";
-        cout << elem_univ.N[k][1] << "\n";
-        cout << elem_univ.N[k][2] << "\n";
-        cout << elem_univ.N[k][3] << "\n";
-    }*/
-   /* cout << elem_univ.surface[3].N[0][0]<<endl;
-    cout << elem_univ.surface[3].N[0][1]<<endl;
-    cout << elem_univ.surface[3].N[0][2]<<endl;
-    cout << elem_univ.surface[3].N[0][3]<<endl;*/
+    for (int i = 0; i < global.SimulationTime / global.SimulationStepTime; i++) {
+        cout << "Min: " << wyniki[i].x << "     Max: " << wyniki[i].y << "    Czas: "<<(int)global.SimulationStepTime*(i+1)<<"s"<<endl;
+    }
 
-    /*for (int k = 0; k < GlobalData::npc; k++) {
-        cout << "Point" << k << "\n";
-        cout << elem_univ.dN_dksi[k][0] << "\n";
-        cout << elem_univ.dN_dksi[k][1] << "\n";
-        cout << elem_univ.dN_dksi[k][2] << "\n";
-        cout << elem_univ.dN_dksi[k][3] << "\n";
+    // koniec pomiaru czasu i wypis
+    auto t_end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = t_end - t_start;
+    cout << "Calkowity czas wykonania programu: " << elapsed.count() << " s\n";
 
-        cout << elem_univ.dN_deta[k][0] << "\n";
-        cout << elem_univ.dN_deta[k][1] << "\n";
-        cout << elem_univ.dN_deta[k][2] << "\n";
-        cout << elem_univ.dN_deta[k][3] << "\n";
-
-
-    };*/
-  /* cout << grid.elements[0].J[0].J[0][0] << " " << grid.elements[0].J[0].J[0][1] << " " << grid.elements[0].J[0].J[1][0] << " " << grid.elements[0].J[0].J[1][1] << "\n";
-    cout << grid.elements[0].J[1].J[0][0] << " " << grid.elements[0].J[1].J[0][1] << " " << grid.elements[0].J[1].J[1][0] << " " << grid.elements[0].J[1].J[1][1] << "\n";
-    cout << grid.elements[0].J[2].J[0][0] << " " << grid.elements[0].J[2].J[0][1] << " " << grid.elements[0].J[2].J[1][0] << " " << grid.elements[0].J[2].J[1][1] << "\n";
-    cout << grid.elements[0].J[3].J[0][0] << " " << grid.elements[0].J[3].J[0][1] << " " << grid.elements[0].J[3].J[1][0] << " " << grid.elements[0].J[3].J[1][1] << "\n";*/
-    /*double x[4] = { 0.0,0.025,0.025,0.0 };
-    double y[4] = { 0.0,0.0,0.025,0.025 };
-    Jakobian test(3, x, y);
-    cout << test.J[0][0] << " " << test.J[0][1] << " "<<test.J[1][0] << " "<< test.J[1][1];
-    cout << "\n" << 1 / test.detJ;*/
-    /*for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++) {
-            cout << grid.elements[0].Hbc[i][j] << "  ";
-        }
-        cout << "\n";
-    }*/
-   
     return 0;
 }

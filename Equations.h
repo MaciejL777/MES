@@ -15,12 +15,12 @@ public:
 	std::vector<double> PC;
 	std::vector<double> t1;
 	std::vector<double> t0;
-	void Compute_H(Grid grid);
-	void Compute_P(Grid grid);
-	void Compute_C(Grid grid);
+	void Compute_H(const Grid& grid);
+	void Compute_P(const Grid& grid);
+	void Compute_C(const Grid& grid);
 	void Compute_HC();
 	void Compute_PC();
-	void Compute(Grid grid);
+	void Compute(const Grid& grid);
 	void solveSystem();
 	std::vector<double> getResult() {
 		return t1;

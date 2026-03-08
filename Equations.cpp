@@ -15,36 +15,54 @@ Equations::Equations(int nN,double Initialtemp,double t):size(nN) {
 	}
     dt = t;
 }
-void Equations::Compute_H(Grid grid) {
-	for (int ID = 0; ID < grid.nE; ID++) {
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < 4; j++) {
-				H[grid.elements[ID].ID[i]-1][grid.elements[ID].ID[j]-1] += grid.elements[ID].H_local[i][j];
-			}
-		}
-	}
-}
-void Equations::ShowH() {
-	std::cout << std::fixed << std::setprecision(2);
-	for (int i = 0; i < size; i++) {
-		for (int j = 0; j < size; j++) {
-			std::cout << H[i][j] << "  ";
-		}
-		std::cout << "\n";
-	}
-}
-void Equations::Compute_P(Grid grid){
-	for (int ID = 0; ID < grid.nE; ID++) {
-		for (int i = 0; i < 4; i++) {
-				P[grid.elements[ID].ID[i] - 1] += grid.elements[ID].P_local[i];
-		}
-	}
-}
-void Equations::Compute_C(Grid grid) {
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+void Equations::Compute_H(const Grid& grid) {
+    // równoleg³e po elementach; aktualizacja H[][] wymaga atomika przy dodawaniu
+    #pragma omp parallel for
     for (int ID = 0; ID < grid.nE; ID++) {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                C[grid.elements[ID].ID[i] - 1][grid.elements[ID].ID[j] - 1] += grid.elements[ID].C_local[i][j];
+                int gi = grid.elements[ID].ID[i]-1;
+                int gj = grid.elements[ID].ID[j]-1;
+                double val = grid.elements[ID].H_local[i][j];
+                #pragma omp atomic
+                H[gi][gj] += val;
+            }
+        }
+    }
+}
+void Equations::ShowH() {
+    std::cout << std::fixed << std::setprecision(2);
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            std::cout << H[i][j] << "  ";
+        }
+        std::cout << "\n";
+    }
+}
+void Equations::Compute_P(const Grid& grid){
+    #pragma omp parallel for
+    for (int ID = 0; ID < grid.nE; ID++) {
+        for (int i = 0; i < 4; i++) {
+                int gi = grid.elements[ID].ID[i] - 1;
+                double val = grid.elements[ID].P_local[i];
+                #pragma omp atomic
+                P[gi] += val;
+        }
+    }
+}
+void Equations::Compute_C(const Grid& grid) {
+    #pragma omp parallel for
+    for (int ID = 0; ID < grid.nE; ID++) {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                int gi = grid.elements[ID].ID[i] - 1;
+                int gj = grid.elements[ID].ID[j] - 1;
+                double val = grid.elements[ID].C_local[i][j];
+                #pragma omp atomic
+                C[gi][gj] += val;
             }
         }
     }
@@ -59,6 +77,7 @@ void Equations::ShowC() {
     }
 }
 void Equations::Compute_HC() {
+    #pragma omp parallel for
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
             HC[i][j] = H[i][j] + (C[i][j] / dt);
@@ -67,14 +86,16 @@ void Equations::Compute_HC() {
 }
 void Equations::Compute_PC() {
     fill(PC.begin(), PC.end(), 0);
+    #pragma omp parallel for
     for (int i = 0; i < size; i++) {
-        PC[i] += P[i];
+        double sum = P[i];
         for (int j = 0; j < size; j++) {
-            PC[i]+= (C[i][j] * t0[j] / dt);
+            sum += (C[i][j] * t0[j] / dt);
         }
+        PC[i] = sum;
     }
 }
-void Equations::Compute(Grid grid) {
+void Equations::Compute(const Grid& grid) {
     Compute_H(grid);
     Compute_P(grid);
     Compute_C(grid);
@@ -112,7 +133,7 @@ void Equations::solveSystem()
         }
     }
 
-    
+
     for (int i = n - 1; i >= 0; i--) {
         double sum = b[i];
         for (int j = i + 1; j < n; j++)

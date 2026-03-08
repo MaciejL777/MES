@@ -1,6 +1,9 @@
 #include "Grid.h"
 #include "Jakobian.h"
 #include<array>
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 
 
 Grid::Grid(std::ifstream& file, const GlobalData& global) : nN(global.nN), nE(global.nE) {
@@ -49,8 +52,6 @@ Grid::Grid(std::ifstream& file, const GlobalData& global) : nN(global.nN), nE(gl
             std::cerr << "blad przy wczytywaniu elementu nr " << i + 1 << " | linia: " << line << std::endl;
             exit(1);
         }
-        //std::cout << tmp[0].x << " " << tmp[1].x << " " << tmp[2].x << " " << tmp[3].x << "\n";
-        //std::cout << tmp[0].y << " " << tmp[1].y << " " << tmp[2].y << " " << tmp[3].y << "\n";
         elements.emplace_back(n1, n2, n3, n4,nodes);
     }
 
@@ -67,6 +68,8 @@ Grid::Grid(std::ifstream& file, const GlobalData& global) : nN(global.nN), nE(gl
             nodes[val - 1].BC = 1;
         }
     }
+    // Równoleg³e obliczanie H/P/C dla ka¿dego elementu (ka¿dy element jest niezale¿ny)
+    #pragma omp parallel for schedule(static)
     for (int i = 0; i < nE;i++) {
         elements[i].Licz_H_P_C(global.Conductivity, nodes,global.Alfa,global.Tot,global.Density,global.SpecificHeat);
     }
