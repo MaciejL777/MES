@@ -1,5 +1,4 @@
 #include "GlobalData.h"
-#include "Gauss.h"
 
 GlobalData::GlobalData(std::ifstream& file) {
     std::string line;
