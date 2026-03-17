@@ -5,7 +5,6 @@
 #include <string>
 #include <vector>
 #include "GlobalData.h"
-#include "Gauss.h"
 #include "Jakobian.h"
 #include"Element.h"
 
