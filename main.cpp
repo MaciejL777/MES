@@ -33,6 +33,7 @@ int main(int argc, char** argv) {
         }
     }
     if (numThreads <= 0) {
+#if defined(_MSC_VER)
         char* env = nullptr;
         size_t envLen = 0;
         if (_dupenv_s(&env, &envLen, "OMP_NUM_THREADS") == 0 && env != nullptr) {
@@ -41,7 +42,18 @@ int main(int argc, char** argv) {
             } catch (...) {
                 numThreads = 0;
             }
+            free(env);
         }
+#else
+        const char* env = std::getenv("OMP_NUM_THREADS");
+        if (env != nullptr) {
+            try {
+                numThreads = std::stoi(env);
+            } catch (...) {
+                numThreads = 0;
+            }
+        }
+#endif
     }
 
 #ifdef _OPENMP

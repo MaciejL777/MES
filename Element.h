@@ -1,6 +1,9 @@
 #pragma once
-#include"ElemUniw.h"
-#include"Jakobian.h"
+#include <vector>
+#include "ElemUniw.h"
+#include "Jakobian.h"
+#include "GlobalData.h"
+
 class Node {
 public:
     double x, y;
