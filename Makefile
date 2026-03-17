@@ -5,7 +5,7 @@
 #   make clean
 #
 CXX ?= g++
-CXXFLAGS := -std=c++14 -O2 -Wall
+CXXFLAGS := -std=c++14 -Wall
 # Enable OpenMP by calling: make OPENMP=1
 ifeq ($(OPENMP),1)
 CXXFLAGS += -fopenmp
