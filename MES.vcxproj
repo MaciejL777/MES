@@ -145,6 +145,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ElemUniw.h" />
+    <None Include="makefile Makefile" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Test1_4_4.txt" />
