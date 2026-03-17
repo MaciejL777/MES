@@ -58,7 +58,7 @@
     <None Include="ElemUniw.h">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="makefile Makefile" />
+    <None Include="Makefile" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Test1_4_4.txt">
